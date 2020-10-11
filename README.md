@@ -3,7 +3,7 @@
 <p><b>Vídeo: <a href="#">N/A</a></b></p>
 
 <p align="center">
-  <img src="images/title.png" width="100%">
+  <img src="images/title.png" width="50%">
 </p>
 
 ## Overview
