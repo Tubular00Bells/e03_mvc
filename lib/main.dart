@@ -10,8 +10,7 @@ void main() {
     home: MainApp(),
     theme: ThemeData(
         primaryColor: Colors.black,
-        //accentColor: Colors.redAccent
-        primarySwatch: Colors.red
+        primarySwatch: Colors.purple
       ),
   ));
 }

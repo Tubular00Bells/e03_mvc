@@ -18,7 +18,7 @@ class _MainAppState extends State<MainApp> {
   var _controller = ItemController();
 
   @override
-  void initState() {//yoooo
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.getAll().then((data) {
@@ -44,7 +44,7 @@ class _MainAppState extends State<MainApp> {
           controller: _scrollController,
           padding: const EdgeInsets.symmetric(vertical: 8),
           children: [
-            //Image.asset('images/title.png',),
+            Image.asset('images/title.png'),
             for (int i = 0; i < _lista.length; i++)
               ListTile(
                   leading: ExcludeSemantics(
@@ -140,10 +140,6 @@ class _MainAppState extends State<MainApp> {
       ),
       onPressed: () {
         String removedText = _lista[i].nome;
-        //setState(() {
-          //_lista.removeAt(i);
-        //});
-        //_showSnackbar("Removido \""+removedText+"\"","DELETE",Colors.red);
         _controller.delete(i).then((data) {
           _showSnackbar("Removido \""+removedText+"\"","DELETE",Colors.red);
           setState(() {
@@ -164,7 +160,7 @@ class _MainAppState extends State<MainApp> {
           return AlertDialog(
             content: Form(
               key: _formKey,
-              child: Container(
+              child: SingleChildScrollView(
                 child: Column(
                 children: [
                   TextFormField(
@@ -205,10 +201,11 @@ class _MainAppState extends State<MainApp> {
                       labelText: "Quantidade",
                       prefixText: "x"
                     ),
-                  )
+                  ),
+                  Image.asset('images/gif.gif')
                 ],
               )
-              )
+            )
               
             ),
             actions: <Widget>[
@@ -229,11 +226,6 @@ class _MainAppState extends State<MainApp> {
                       quantidade: int.tryParse(_amountController.text) ?? 1
                     ));
                     setState(() {
-                      /*_lista.add({
-                        "name": _itemController.text,
-                        "price": double.tryParse(_priceController.text) ?? 0,
-                        "amount": int.tryParse(_amountController.text) ?? 1
-                      });*/
                       _lista=_controller.list;
                       addedText = _itemController.text;
                       _itemController.text = "";
