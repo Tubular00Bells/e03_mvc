@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:e03_mvc/views/item.view.dart';
 
-//const bgColor = Colors.grey[900];
-
 void main() {
   runApp(MaterialApp(
     title: 'MVC',
