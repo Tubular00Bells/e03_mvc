@@ -1,6 +1,6 @@
 # Shopping Pursuit
 <p>App desenvolvido sobre o framework Flutter.</p>
-<p><b>Vídeo: <a href="#">N/A</a></b></p>
+<p><b>Vídeo: <a href="https://youtu.be/Mi9yBkaDTm4">https://youtu.be/Mi9yBkaDTm4</a></b></p>
 
 <p align="center">
   <img src="images/title.png" width="50%">

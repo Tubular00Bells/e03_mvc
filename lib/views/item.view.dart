@@ -33,7 +33,6 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.grey[900],
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('MO-NA-D-1 ~ Shopping Pursuit'),
@@ -196,7 +195,6 @@ class _MainAppState extends State<MainApp> {
                       }
                     },
                     keyboardType: TextInputType.number,
-                    //initialValue: "1",
                     decoration: InputDecoration(
                       labelText: "Quantidade",
                       prefixText: "x"
