@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:e03_mvc/controllers/item.controller.dart';
 import 'package:e03_mvc/models/item.model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class MainApp extends StatefulWidget {
   @override
   _MainAppState createState() => _MainAppState();
 }
 
+  ThemeData _lightTheme = ThemeData(
+    //brightness: Brightness.light,
+    primaryColor: Colors.purple[900],
+    primarySwatch: Colors.purple
+  );
+  ThemeData _darkTheme = ThemeData(
+    brightness: Brightness.dark
+  );
+
+ThemeData _themeData = _lightTheme;
+ThemeData get themeData => _themeData;
+
 class _MainAppState extends State<MainApp> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var _itemController = TextEditingController();
@@ -16,10 +31,13 @@ class _MainAppState extends State<MainApp> {
   final _scrollController = ScrollController();
   List _lista = List<Item>();
   var _controller = ItemController();
+  
+  String _theme = 'Light';
 
   @override
   void initState() {
     super.initState();
+    _loadTheme();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.getAll().then((data) {
         setState(() {
@@ -27,54 +45,116 @@ class _MainAppState extends State<MainApp> {
         });
       });
     });
+  }
 
+  _loadTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _theme = (prefs.getString('theme') ?? 'Light');
+      _themeData = _theme == 'Dark' ? _darkTheme : _lightTheme;
+    });
+  }
+
+  _setTheme(theme) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _theme = theme;
+      _themeData = theme == 'Dark' ? _darkTheme : _lightTheme;
+      prefs.setString('theme', theme);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text('MO-NA-D-1 ~ Shopping Pursuit'),
-        centerTitle: true,
-      ),
-      body: Scrollbar(
-        child: ListView(
-          controller: _scrollController,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          children: [
-            Image.asset('images/title.png'),
-            for (int i = 0; i < _lista.length; i++)
-              ListTile(
-                  leading: ExcludeSemantics(
-                    child: CircleAvatar(child: Text('${i + 1}')),
-                  ),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _listItemName(i),
-                      _listItemPrice(i),
-                      _listItemAmount(i),
-                      _listDeleteIcon(i),
-                    ],
-                  )
-                ),
-            _listTotal(),
-            SizedBox(
-              child: Container(),
-              height: 56.6+30.0
-            )
-          ],
-        ),
-      ),
-      
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _displayDialog(context),
-      ),
-      
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      title: 'MVC',
+      debugShowCheckedModeBanner: false,
+      home: _mainAppScaffold(context),
+      theme: themeData,
     );
   }
+
+  _mainAppScaffold(BuildContext context){
+    return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text('MO-NA-D-1 ~ Shopping Pursuit'),
+          centerTitle: true,
+          actions: [
+            _popupMenuButton()
+          ]
+        ),
+        body: Scrollbar(
+          child: ListView(
+            controller: _scrollController,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            children: [
+              Image.asset('images/title.png'),
+              for (int i = 0; i < _lista.length; i++)
+                ListTile(
+                    leading: ExcludeSemantics(
+                      child: CircleAvatar(child: Text('${i + 1}')),
+                    ),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _listItemName(i),
+                        _listItemPrice(i),
+                        _listItemAmount(i),
+                        _listDeleteIcon(i),
+                      ],
+                    )
+                  ),
+              _listTotal(),
+              SizedBox(
+                child: Container(),
+                height: 56.6+30.0
+              )
+            ],
+          ),
+        ), 
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () => _displayDialog(),
+        ),
+      );
+  }
+
+  _popupMenuButton(){
+    return PopupMenuButton(
+      onSelected: (value) => _setTheme(value) ,
+      itemBuilder: (context) {
+        var list = List<PopupMenuEntry<Object>>();
+        list.add(
+          PopupMenuItem(
+            child: Text("Tema")
+          ),
+        );
+      list.add(
+        PopupMenuDivider(
+          height: 10,
+        ),
+      );
+      list.add(
+        CheckedPopupMenuItem(
+          child: Text("Light"),
+          value: 'Light',
+          checked: _theme == 'Light',
+        ),
+      );
+      list.add(
+        CheckedPopupMenuItem(
+          child: Text("Dark"),
+          value: 'Dark',
+          checked: _theme == 'Dark',
+        ),
+      );
+      return list;
+    },
+  );
+}
+
 
   _listTotal(){
     double total=0;
@@ -133,9 +213,9 @@ class _MainAppState extends State<MainApp> {
   _listDeleteIcon(int i){
     return IconButton(
       icon: Icon(
-        Icons.close,
+        Icons.cancel,
         size: 20.0,
-        color: Colors.red[900],
+        color: Colors.red,
       ),
       onPressed: () {
         String removedText = _lista[i].nome;
@@ -149,7 +229,9 @@ class _MainAppState extends State<MainApp> {
     );
   }
 
-  _displayDialog(context) async {
+  _displayDialog() async {
+    final context = _navigatorKey.currentState.overlay.context;
+    //showDialog(context: context, builder: (x) => dialog);
     if(_amountController.text == ""){
       _amountController.text = "1";
     }
