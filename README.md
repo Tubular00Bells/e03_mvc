@@ -2,13 +2,17 @@
 <p>App desenvolvido sobre o framework Flutter.</p>
 <p><b>Vídeo: <a href="https://youtu.be/s9rg-ZEkNFM">https://youtu.be/s9rg-ZEkNFM</a></b></p>
 
+<p>
 <img src="images/gif.gif">
 <img src="images/gif.gif" align="right">
+</p>
 <p align="center">
   <img src="images/title.png" width="50%">
 </p>
+<p>
 <img src="images/gif.gif">
 <img src="images/gif.gif" align="right">
+</p>
 
 ## Overview
 <p align="justify">Uma extensão do app prévio <a href="https://github.com/Tubular00Bells/e02_lista">Lista "Shopping Forgery"</a>, este app possui as mesmas funcionalidades de seu antecessor, com novas adicionadas: o app agora salva automaticamente (persiste) todo o conteúdo da lista de compras em um arquivo json, que é lido durante a inicialização do app. Ou seja, os itens da lista não são perdidos depois que o app é fechado.</p>
